@@ -1,0 +1,6 @@
+[package]
+name = "jackstack"
+version = "0.1.0"
+authors = ["sam"]
+
+[dependencies]
