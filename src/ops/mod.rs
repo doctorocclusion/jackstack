@@ -23,7 +23,7 @@ macro_rules! impl_op {
 
 pub mod core;
 pub mod print;
-pub mod stacked;
+pub mod stack;
 
 pub struct Ops {
 	reg: HashMap<String, fn() -> Box<Op>>

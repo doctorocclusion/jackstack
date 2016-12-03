@@ -5,7 +5,9 @@ mod value;
 mod ops;
 mod interp;
 
-use std::io::{BufRead, stdin};
+use std::io::{Read, BufRead, stdin};
+use std::env;
+use std::fs::File;
 
 use context::{Context};
 use ops::{Ops};
@@ -14,12 +16,24 @@ fn main() {
     let mut ops = Ops::new();
     ops::core::init(&mut ops);
     ops::print::init(&mut ops);
-    ops::stacked::init(&mut ops);
+    ops::stack::init(&mut ops);
 
     let mut ctx = Context::new();
 
-    let stdin = stdin();
-    for line in stdin.lock().lines() {
-       interp::interp(&mut ctx, &mut ops, line.unwrap());
+    let mut args = env::args();
+    args.next();
+    match args.next() {
+        Some(fname) => {
+            let mut f = File::open(fname).unwrap();
+            let mut code = String::new();
+            f.read_to_string(&mut code).unwrap();
+            interp::interp(&mut ctx, &mut ops, code);
+        },
+        None => {
+            let stdin = stdin();
+            for line in stdin.lock().lines() {
+               interp::interp(&mut ctx, &mut ops, line.unwrap());
+            }
+        }
     }
 }

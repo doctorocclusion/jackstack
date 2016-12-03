@@ -226,7 +226,7 @@ impl Frame {
 	pub fn pop(&mut self) -> Option<Box<Value>> {
 		let len = self.stack.len();
 		if len <= self.start { return None; }
-		if len == self.start - 1 { self.start -= 1 }
+		if self.start > 0 && len == self.start - 1 { self.start -= 1 }
 		return self.stack.pop();
 	}
 
