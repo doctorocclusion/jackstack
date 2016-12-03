@@ -13,7 +13,7 @@ struct TokenIter<'a> {
 }
 
 impl<'a> TokenIter<'a> {
-	fn new(str: &String) -> TokenIter {
+	fn new(str: &str) -> TokenIter {
 		TokenIter {
 			str: str.chars(),
 			queue: LinkedList::new()
@@ -127,7 +127,7 @@ pub fn compile(ops: &Ops, toks: &mut Iterator<Item = String>) -> Vec<Box<Op>> {
 	list
 }
 
-pub fn interp(ctx: &mut Context, ops: &Ops, code: String) {
-	let mut toks = TokenIter::new(&code);
+pub fn interp(ctx: &mut Context, ops: &Ops, code: &str) {
+	let mut toks = TokenIter::new(code);
 	opvec_to_fn(compile(ops, &mut toks))(ctx);
 }

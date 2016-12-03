@@ -27,12 +27,21 @@ fn main() {
             let mut f = File::open(fname).unwrap();
             let mut code = String::new();
             f.read_to_string(&mut code).unwrap();
+            let code = if code.starts_with("#!") {
+                match code.find('\n') {
+                    Some(l) => &code[(l+1)..],
+                    None => ""
+                }
+                
+            } else {
+                &code
+            };
             interp::interp(&mut ctx, &mut ops, code);
         },
         None => {
             let stdin = stdin();
             for line in stdin.lock().lines() {
-               interp::interp(&mut ctx, &mut ops, line.unwrap());
+               interp::interp(&mut ctx, &mut ops, &line.unwrap());
             }
         }
     }
