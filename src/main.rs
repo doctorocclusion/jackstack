@@ -2,78 +2,24 @@
 
 mod context;
 mod value;
+mod ops;
+mod interp;
+
+use std::io::{BufRead, stdin};
 
 use context::{Context};
-use value::{Value};
-
-fn print(con: &Context) {
-	let mut stack : Vec<&Box<Value>> = con.iter().collect();
-	stack.reverse();
-    println!("{:?}", stack);
-}
+use ops::{Ops};
 
 fn main() {
+    let mut ops = Ops::new();
+    ops::core::init(&mut ops);
+    ops::print::init(&mut ops);
+    ops::stacked::init(&mut ops);
 
-    let mut con = Context::new();
+    let mut ctx = Context::new();
 
-    con.push(Box::new(Value::Double(10f64)));
-
-    print(&con);
-
-    con.enter_frame();
-    for i in 0..5 {
-    	con.push(Box::new(Value::Double(i as f64)));
+    let stdin = stdin();
+    for line in stdin.lock().lines() {
+       interp::interp(&mut ctx, &mut ops, line.unwrap());
     }
-
-    print(&con);
-
-    con.hide_frame();
-
-    print(&con);
-
-    for i in 5..10 {
-    	con.push(Box::new(Value::Double(i as f64)));
-    }
-
-    print(&con);
-
-    con.enter_frame();
-
-    print(&con);
-
-    con.push(Box::new(Value::Double(50f64)));
-
-    print(&con);
-
-    con.hide_frame();
-
-    print(&con);
-
-    con.push(Box::new(Value::Double(60f64)));
-
-    print(&con);
-
-    con.drain(3);
-
-    print(&con);
-
-    let popped = con.pop().unwrap();
-
-    print(&con);
-
-    con.push(popped);
-
-    print(&con);
-
-    con.push(Box::new(Value::Double(40f64)));
-
-    print(&con);
-
-    con.exit_frame_list();
-
-    print(&con);
-
-    con.exit_frame();
-
-    print(&con);
 }

@@ -182,6 +182,25 @@ impl Context {
 			cur: cur
 		}
 	}
+
+	pub fn print_stack(&self) -> String {
+		let mut out = String::from("<STACK TOP>\n");
+		for frame in self.frames.iter().rev() {
+			let vis = frame.available();
+			let count = frame.stack.len();
+			for val in frame.stack[(count - vis)..count].iter().rev() {
+				out += &format!("{}\n", val.to_string());
+			}
+			for val in frame.stack[0..(count - vis)].iter().rev() {
+				out += &format!("  * {}\n", val.to_string());
+			}
+			out += "---------------\n";
+		}
+		let newlen = out.len() - 17;
+		out.truncate(newlen);
+		out += "\n<STACK BOTTOM>";
+		out
+	}
 }
 
 pub struct Frame {
