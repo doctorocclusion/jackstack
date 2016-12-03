@@ -1,5 +1,5 @@
 use std::string::{ToString};
-use std::fmt::{Display};
+use std::rc::{Rc};
 
 use context::Context;
 
@@ -7,7 +7,7 @@ pub enum Value {
 	Null,
 	Double(f64),
 	List(Vec<Box<Value>>),
-	Lambda(Box<Fn(&mut Context)>)
+	Lambda(Rc<Fn(&mut Context)>)
 }
 
 impl Value {

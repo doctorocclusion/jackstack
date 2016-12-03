@@ -5,6 +5,7 @@ use std::collections::{LinkedList};
 use context::Context;
 use value::{Value};
 use ops::{Ops, Op};
+use std::rc::{Rc};
 
 struct TokenIter<'a> {
 	str: Chars<'a>,
@@ -63,24 +64,6 @@ impl<'a> Iterator for TokenIter<'a> {
     }
 }
 
-struct OpLambda {
-	pub code : Vec<Box<Op>>
-}
-
-impl OpLambda {
-   	fn new(code: Vec<Box<Op>>) -> Box<Op> {
-   		Box::new(OpLambda {
-   			code: code
-   		})
-   	}
-}
-
-impl Op for OpLambda {
-	fn apply(&self, ctx: &mut Context) {
-		for f in self.code.iter() { f.apply(ctx); }
-	}
-}
-
 struct OpPushDouble {
 	pub val: f64
 }
@@ -99,6 +82,30 @@ impl Op for OpPushDouble {
 	}
 }
 
+fn opvec_to_fn(opvec: Vec<Box<Op>>) -> Rc<Fn(&mut Context)> {
+	Rc::new(move |ctx| {
+		for o in opvec.iter() { o.apply(ctx); }
+	})
+}
+
+struct OpPushLambda {
+	pub val: Rc<Fn(&mut Context)>
+}
+
+impl OpPushLambda {
+   	fn new(val: Rc<Fn(&mut Context)>) -> Box<Op> {
+   		Box::new(OpPushLambda {
+   			val: val
+   		})
+   	}
+}
+
+impl Op for OpPushLambda {
+	fn apply(&self, ctx: &mut Context) {
+		ctx.push(Box::new(Value::Lambda(self.val.clone())));
+	}
+}
+
 pub fn compile(ops: &Ops, toks: &mut Iterator<Item = String>) -> Vec<Box<Op>> {
 	let mut list: Vec<Box<Op>> = Vec::new();
 
@@ -108,7 +115,7 @@ pub fn compile(ops: &Ops, toks: &mut Iterator<Item = String>) -> Vec<Box<Op>> {
 		let t = t.unwrap();
 
 		match &t[..] {
-		    "{" => list.push(OpLambda::new(compile(ops, toks))),
+		    "{" => list.push(OpPushLambda::new(opvec_to_fn(compile(ops, toks)))),
 		    "}" => break,
 		    s @ _ => match s.parse::<f64>() {
 		    	Ok(n) => list.push(OpPushDouble::new(n)),
@@ -122,5 +129,5 @@ pub fn compile(ops: &Ops, toks: &mut Iterator<Item = String>) -> Vec<Box<Op>> {
 
 pub fn interp(ctx: &mut Context, ops: &Ops, code: String) {
 	let mut toks = TokenIter::new(&code);
-	OpLambda::new(compile(ops, &mut toks)).apply(ctx);
+	opvec_to_fn(compile(ops, &mut toks))(ctx);
 }
