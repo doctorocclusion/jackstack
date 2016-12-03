@@ -17,6 +17,7 @@ fn main() {
     ops::core::init(&mut ops);
     ops::print::init(&mut ops);
     ops::stack::init(&mut ops);
+    ops::control::init(&mut ops);
 
     let mut ctx = Context::new();
 
@@ -41,7 +42,7 @@ fn main() {
         None => {
             let stdin = stdin();
             for line in stdin.lock().lines() {
-               interp::interp(&mut ctx, &mut ops, &line.unwrap());
+                interp::interp(&mut ctx, &mut ops, &line.unwrap());
             }
         }
     }

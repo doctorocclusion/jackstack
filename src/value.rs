@@ -14,6 +14,17 @@ impl Value {
 
 }
 
+impl Clone for Value {
+	fn clone(&self) -> Self {
+		match *self {
+			Value::Null => Value::Null,
+			Value::Double(v) => Value::Double(v),
+			Value::List(ref v) => Value::List(v.clone()),
+			Value::Lambda(ref v) => Value::Lambda(v.clone())
+		}
+	}
+}
+
 impl ToString for Value {
 	fn to_string(&self) -> String {
 		match *self {
@@ -21,7 +32,6 @@ impl ToString for Value {
 			Value::Double(v) => v.to_string(),
 			Value::List(ref list) => {
 				let mut o = list.iter().map(|v| v.to_string()).fold(String::from("["), |acc, x| acc + &x + " ");
-				let len = o.len();
 				o.pop();
 				o += "]";
 				o
