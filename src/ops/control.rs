@@ -9,10 +9,12 @@ simple_op!(OpRepeat, ctx, (n: Double, f: Lambda), (), {
 });
 
 simple_op!(OpMap, ctx, (f: Lambda, l: List), (), {
+    ctx.enter_frame();
     for i in l {
         ctx.push(i);
         f(ctx);
     }
+    ctx.exit_frame_list();
 });
 
 pub fn init(ops: &mut Ops) {

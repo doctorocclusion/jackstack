@@ -45,9 +45,18 @@ impl_op!(OpEnlist, ctx, {
     ctx.push(o);
 });
 
+impl_op!(OpListReverse, ctx, {
+    let mut l = ctx.peek_mut().unwrap();
+    match l.as_mut() {
+        &mut Value::List(ref mut l) => l.reverse(),
+        _ => panic!()
+    }
+});
+
 pub fn init(ops: &mut Ops) {
     ops.add(String::from("lpush"), OpListPush::new);
     ops.add(String::from("lpop"), OpListPop::new);
     ops.add(String::from("delist"), OpDelist::new);
     ops.add(String::from("enlist"), OpEnlist::new);
+    ops.add(String::from("lrev"), OpListReverse::new);
 }
