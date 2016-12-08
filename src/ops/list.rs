@@ -35,7 +35,11 @@ impl_op!(OpEnlist, ctx, {
     let n = ctx.pop().unwrap();
     let o;
     match *n {
-       Value::Double(n) => o = Box::new(Value::List(ctx.drain(n as usize).collect())),
+       Value::Double(n) => {
+            let mut v: Vec<Box<Value>> = ctx.drain(n as usize).collect();
+            v.reverse();
+            o = Box::new(Value::List(v))
+        },
         _ => panic!()
     }
     ctx.push(o);
