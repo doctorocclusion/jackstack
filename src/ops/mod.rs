@@ -26,11 +26,11 @@ macro_rules! impl_op {
 }
 
 macro_rules! pattern_op {
-    ($n:ident, [$pat:pat], [$(push:ident),*], $x:expr) => (impl_op!($n, _ctx, {
+    ($n:ident, $ctx:ident, [$pat:pat], [$(push:ident),*], $x:expr) => (impl_op!($n, $ctx, {
         let input;
         {
             let pop_count = 0usize $(+ replace_expr!($o 1usize))*;
-            let mut drain = _ctx.drain(pop_count);
+            let mut drain = $ctx.drain(pop_count);
             intput = ($(*drain.next().unwrap()),*);
         }
         match intput {
@@ -40,7 +40,7 @@ macro_rules! pattern_op {
                 )*
                 $x;
                 $(
-                    _ctx.push(Box::new($u));
+                    $ctx.push(Box::new($u));
                 )*
             },
             _ => panic!()
@@ -49,13 +49,13 @@ macro_rules! pattern_op {
 }
 
 macro_rules! simple_op {
-    ($n:ident, ($($o:ident: $ot:ident),*), ($($u:ident: $ut:ident),*), $x:expr) => (impl_op!($n, _ctx, {
+    ($n:ident, $ctx:ident, ($($o:ident: $ot:ident),*), ($($u:ident: $ut:ident),*), $x:expr) => (impl_op!($n, $ctx, {
         $(
             let $o;
         )*
         {
             let pop_count = 0usize $(+ replace_expr!($o 1usize))*;
-            let mut drain = _ctx.drain(pop_count);
+            let mut drain = $ctx.drain(pop_count);
             $(
                 $o = if let Value::$ot(x) = *drain.next().unwrap() {x} else { panic!() };
             )*
@@ -65,7 +65,7 @@ macro_rules! simple_op {
         )*
         $x;
         $(
-            _ctx.push(Box::new(Value::$ut($u)));
+            $ctx.push(Box::new(Value::$ut($u)));
         )*
     });)
 }

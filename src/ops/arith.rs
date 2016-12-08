@@ -2,16 +2,16 @@ use context::Context;
 use super::{Ops, Op};
 use value::Value;
 
-simple_op!(OpAdd, (b: Double, a: Double), (o: Double), o = a + b);
-simple_op!(OpSub, (b: Double, a: Double), (o: Double), o = a - b);
-simple_op!(OpMul, (b: Double, a: Double), (o: Double), o = a * b);
-simple_op!(OpDiv, (b: Double, a: Double), (o: Double), o = a / b);
-simple_op!(OpSqrt, (a: Double), (o: Double), o = a.sqrt());
-simple_op!(OpExp, (a: Double), (o: Double), o = a.exp());
-simple_op!(OpPow, (b: Double, a: Double), (o: Double), o = a.powf(b));
-simple_op!(OpSin, (a: Double), (o: Double), o = a.sin());
-simple_op!(OpCos, (a: Double), (o: Double), o = a.cos());
-simple_op!(OpTan, (a: Double), (o: Double), o = a.tan());
+simple_op!(OpAdd, c, (b: Double, a: Double), (o: Double), o = a + b);
+simple_op!(OpSub, c, (b: Double, a: Double), (o: Double), o = a - b);
+simple_op!(OpMul, c, (b: Double, a: Double), (o: Double), o = a * b);
+simple_op!(OpDiv, c, (b: Double, a: Double), (o: Double), o = a / b);
+simple_op!(OpSqrt, c, (a: Double), (o: Double), o = a.sqrt());
+simple_op!(OpExp, c, (a: Double), (o: Double), o = a.exp());
+simple_op!(OpPow, c, (b: Double, a: Double), (o: Double), o = a.powf(b));
+simple_op!(OpSin, c, (a: Double), (o: Double), o = a.sin());
+simple_op!(OpCos, c, (a: Double), (o: Double), o = a.cos());
+simple_op!(OpTan, c, (a: Double), (o: Double), o = a.tan());
 
 pub fn init(ops: &mut Ops) {
     ops.add(String::from("add"), OpAdd::new);
