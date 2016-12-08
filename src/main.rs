@@ -1,4 +1,5 @@
 #![allow(dead_code)]
+// #![feature(box_syntax, box_patterns)]
 
 mod context;
 mod value;
@@ -18,6 +19,8 @@ fn main() {
     ops::print::init(&mut ops);
     ops::stack::init(&mut ops);
     ops::control::init(&mut ops);
+    ops::arith::init(&mut ops);
+    ops::list::init(&mut ops);
 
     let mut ctx = Context::new();
 
