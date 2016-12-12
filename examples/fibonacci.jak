@@ -1,0 +1,6 @@
+#!/bin/jackstack
+1 1 30
+[
+	{2 enlist dup (delist, delist) add} swap repeat
+]
+pop

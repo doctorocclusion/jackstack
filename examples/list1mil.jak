@@ -1,0 +1,2 @@
+#!/bin/jackstack
+[0 {dup 1 add} 1000000 repeat]
