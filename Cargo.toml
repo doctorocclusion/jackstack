@@ -1,0 +1,7 @@
+[package]
+name = "jackstack"
+version = "0.1.0"
+authors = ["sam"]
+
+[dependencies]
+jacklib = {git = "https://github.com/doctorocclusion/jackstack/tree/lib"}

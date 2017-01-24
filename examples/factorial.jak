@@ -1,0 +1,17 @@
+#!/bin/jackstack
+
+20
+	1 sub
+	dup
+
+(
+
+[(  1
+	{dup 1 add}
+, retop) repeat]
+	
+	1
+	{(retop, lpop) mul}
+, retop) repeat
+
+pop del

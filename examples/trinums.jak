@@ -1,0 +1,10 @@
+#!/bin/jackstack
+
+100 dup
+
+[(0 {dup 1 add}, retop) repeat]
+0 swap {add} map delist
+pop
+
+dup 1 add mul 2 div
+pop
