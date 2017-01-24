@@ -1,7 +1,6 @@
 [package]
-name = "jackstack"
+name = "jackstack-lib"
 version = "0.1.0"
 authors = ["sam"]
 
 [dependencies]
-jackstack-lib = { path = "./lib" }

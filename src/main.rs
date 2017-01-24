@@ -1,26 +1,19 @@
-#![allow(dead_code)]
-// #![feature(box_syntax, box_patterns)]
-
-mod context;
-mod value;
-mod ops;
-mod interp;
+extern crate jackstack_lib as jacklib;
 
 use std::io::{Read, BufRead, stdin};
 use std::env;
 use std::fs::File;
 
-use context::{Context};
-use ops::{Ops};
+use jacklib::{Ops, Context};
 
 fn main() {
     let mut ops = Ops::new();
-    ops::core::init(&mut ops);
-    ops::print::init(&mut ops);
-    ops::stack::init(&mut ops);
-    ops::control::init(&mut ops);
-    ops::arith::init(&mut ops);
-    ops::list::init(&mut ops);
+    jacklib::ops::core::init(&mut ops);
+    jacklib::ops::print::init(&mut ops);
+    jacklib::ops::stack::init(&mut ops);
+    jacklib::ops::control::init(&mut ops);
+    jacklib::ops::arith::init(&mut ops);
+    jacklib::ops::list::init(&mut ops);
 
     let mut ctx = Context::new();
 
@@ -40,12 +33,12 @@ fn main() {
             } else {
                 &code
             };
-            interp::interp(&mut ctx, &mut ops, code);
+            jacklib::interp(&mut ctx, &mut ops, code);
         },
         None => {
             let stdin = stdin();
             for line in stdin.lock().lines() {
-                interp::interp(&mut ctx, &mut ops, &line.unwrap());
+                jacklib::interp(&mut ctx, &mut ops, &line.unwrap());
             }
         }
     }
